@@ -3,8 +3,8 @@ import os
 from sys import argv, exit
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtGui import QPixmap
 from time import sleep
-
 
 pygame.init()
 size = width, height = 900, 700
@@ -17,6 +17,9 @@ class Level(QMainWindow):
         super().__init__()
         path = os.path.join('data', 'ui_main.ui')
         uic.loadUi(path, self)
+        path = os.path.join('data/pictures', 'labyrinth.jpg')
+        self.pixmap = QPixmap(path)
+        self.image.setPixmap(self.pixmap)
 
         self.buttons.buttonClicked.connect(self.run)
         self.names = ['level1.txt', 'level2.txt', 'level3.txt', 'level4.txt', 'level5.txt']
@@ -41,14 +44,26 @@ class Music:
 
     def __init__(self):
         self.musics = ['first.mp3', 'second.mp3', 'third.mp3', 'fourth.mp3', 'fifth.mp3']
-        self.index = 0
+        self.index = 1
 
     def play(self):
         music = os.path.join('data/music', self.musics[self.index])
         pygame.mixer.music.load(music)
-        pygame.mixer.music.set_volume(1.0)
+        pygame.mixer.music.set_volume(0.1)
         pygame.mixer.music.play()
         self.index = (self.index + 1) % 5
+
+    def win(self):
+        music = os.path.join('data/music', 'win.mp3')
+        pygame.mixer.music.load(music)
+        pygame.mixer.music.set_volume(0.1)
+        pygame.mixer.music.play()
+
+    def lose(self):
+        music = os.path.join('data/music', 'lose.mp3')
+        pygame.mixer.music.load(music)
+        pygame.mixer.music.set_volume(1.0)
+        pygame.mixer.music.play()
 
 
 def load_start_fon():
@@ -82,6 +97,7 @@ def load_start_fon():
 
 def load_end_fon():
     sleep(3)
+    music_player.win()
     text = ['Вы справились, поздравляю!!!',
             'Спасибо, что прошли этот лабиринт :)']
     x = 180
@@ -110,6 +126,7 @@ def load_end_fon():
 
 def load_lose_fon():
     sleep(3)
+    music_player.lose()
     text = ['Увы, но ваш персонаж коснулся лавы.',
             'К сожалению, это - мгновенная смерть. :(',
             'Ничего страшного, в следующий раз будьте бдительны!!!']
@@ -150,6 +167,9 @@ def load_image(name, colorkey=None):
     return image
 
 
+level_name = ''
+
+
 def load_level():
     global screen
 
@@ -157,6 +177,8 @@ def load_level():
     ex = Level()
     ex.show()
     app.exec()
+    if not level_name:
+        exit()
     screen = pygame.display.set_mode(size)
     load_start_fon()
 
@@ -167,15 +189,13 @@ def load_level():
 
 
 lines = load_level()
-level_name = ''
 clock = pygame.time.Clock()
-hero = pygame.sprite.Group()
 objects = pygame.sprite.Group()
 heroes = pygame.sprite.Group()
 speed = 0.5
 fps = 60
-'''music_player = Music()
-music_player.play()'''
+music_player = Music()
+music_player.play()
 
 
 class Hero(pygame.sprite.Sprite):
@@ -213,7 +233,9 @@ class Hero(pygame.sprite.Sprite):
         sprites = pygame.sprite.spritecollide(self, objects, False)
         flag = 1
         for sprite in sprites:
-            if sprite.__class__.__name__ == 'Lava':
+            if (sprite.__class__.__name__ == 'Lava' and
+                    any(i in range(sprite.rect.y + 5, sprite.rect.y + 21) for i in [self.rect.y, self.rect.y + 25])
+                    and any(i in range(sprite.rect.x + 5, sprite.rect.x + 21)for i in [self.rect.x, self.rect.x + 25])):
                 flag = 2
                 break
             if sprite.__class__.__name__ == 'Wall':
@@ -345,10 +367,9 @@ def make_level():
 player = make_level()
 running = True
 
-
 while running:
-    '''if not pygame.mixer.music.get_busy():
-        music_player.play()'''
+    if not pygame.mixer.music.get_busy():
+        music_player.play()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False

@@ -14,210 +14,170 @@
    <string>Выбор уровня</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="first">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>220</y>
-      <width>111</width>
-      <height>41</height>
+      <x>61</x>
+      <y>1</y>
+      <width>778</width>
+      <height>651</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(255, 170, 0);
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(0, 255, 255);
+color: rgb(255, 170, 0);</string>
+       </property>
+       <property name="text">
+        <string>Я очень рад, что вы решили попробовать пройти мои лабиринты, их всего 5. </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(0, 255, 255);
+color: rgb(255, 170, 0);</string>
+       </property>
+       <property name="text">
+        <string>Выберите один из них и игра начнётся!!!</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="first">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 170, 0);
 background-color: rgb(0, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Выбрать</string>
-    </property>
-    <attribute name="buttonGroup">
-     <string notr="true">buttons</string>
-    </attribute>
-   </widget>
-   <widget class="QPushButton" name="fourth">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>490</y>
-      <width>111</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(255, 170, 0);
+       </property>
+       <property name="text">
+        <string>Первый</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="second">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 170, 0);
 background-color: rgb(0, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Выбрать</string>
-    </property>
-    <attribute name="buttonGroup">
-     <string notr="true">buttons</string>
-    </attribute>
-   </widget>
-   <widget class="QPushButton" name="fifth">
-    <property name="geometry">
-     <rect>
-      <x>620</x>
-      <y>480</y>
-      <width>111</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(255, 170, 0);
+       </property>
+       <property name="text">
+        <string>Второй</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="third">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 170, 0);
 background-color: rgb(0, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Выбрать</string>
-    </property>
-    <attribute name="buttonGroup">
-     <string notr="true">buttons</string>
-    </attribute>
-   </widget>
-   <widget class="QPushButton" name="second">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>220</y>
-      <width>111</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(255, 170, 0);
+       </property>
+       <property name="text">
+        <string>Третий</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="fourth">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 170, 0);
 background-color: rgb(0, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Выбрать</string>
-    </property>
-    <attribute name="buttonGroup">
-     <string notr="true">buttons</string>
-    </attribute>
-   </widget>
-   <widget class="QPushButton" name="third">
-    <property name="geometry">
-     <rect>
-      <x>670</x>
-      <y>220</y>
-      <width>111</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(255, 170, 0);
+       </property>
+       <property name="text">
+        <string>Четвёртый</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="fifth">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 170, 0);
 background-color: rgb(0, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Выбрать</string>
-    </property>
-    <attribute name="buttonGroup">
-     <string notr="true">buttons</string>
-    </attribute>
-   </widget>
-   <widget class="QLabel" name="level1">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>80</y>
-      <width>81</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="level2">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>110</y>
-      <width>81</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="level3">
-    <property name="geometry">
-     <rect>
-      <x>730</x>
-      <y>100</y>
-      <width>81</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="level4">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>400</y>
-      <width>81</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="level5">
-    <property name="geometry">
-     <rect>
-      <x>700</x>
-      <y>410</y>
-      <width>81</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
+       </property>
+       <property name="text">
+        <string>Пятый</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttons</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="image">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -226,7 +186,7 @@ background-color: rgb(0, 255, 255);</string>
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
