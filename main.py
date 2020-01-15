@@ -5,9 +5,15 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QPixmap
 from time import sleep
+from random import choice
+
 
 pygame.init()
-size = width, height = 900, 700
+size = width, height = 950, 750
+SPRITE_SIDE = 25
+HERO_SIDE = 20
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 screen = None
 
 
@@ -44,26 +50,55 @@ class Music:
 
     def __init__(self):
         self.musics = ['first.mp3', 'second.mp3', 'third.mp3', 'fourth.mp3', 'fifth.mp3']
-        self.index = 1
+        self.index = 0
+        self.order = False
+        self.played = [False] * 5
+        self.change = 0
 
     def play(self):
+        if all([self.played[i] for i in range(5)]):
+            self.played = [False] * 5
+        if not self.order:
+            self.index = choice([i for i in range(5) if not self.played[i]])
+        else:
+            self.index = (self.index + 1) % 5
+        self.played[self.index] = True
         music = os.path.join('data/music', self.musics[self.index])
         pygame.mixer.music.load(music)
-        pygame.mixer.music.set_volume(0.1)
+        pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play()
-        self.index = (self.index + 1) % 5
+
+    def choose_music(self, number):
+        if all([self.played[i] for i in range(5)]):
+            self.played = [False] * 5
+        self.index = number
+        self.played[self.index] = True
+        music = os.path.join('data/music', self.musics[self.index])
+        pygame.mixer.music.load(music)
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play()
 
     def win(self):
         music = os.path.join('data/music', 'win.mp3')
         pygame.mixer.music.load(music)
-        pygame.mixer.music.set_volume(0.1)
+        pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play()
 
     def lose(self):
         music = os.path.join('data/music', 'lose.mp3')
         pygame.mixer.music.load(music)
-        pygame.mixer.music.set_volume(1.0)
+        pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play()
+
+    def change_volume(self):
+        if self.change == 1:
+            volume = pygame.mixer.music.get_volume() + 0.01
+            if volume <= 1:
+                pygame.mixer.music.set_volume(volume)
+        elif self.change == 2:
+            volume = pygame.mixer.music.get_volume() - 0.001
+            if volume >= 0:
+                pygame.mixer.music.set_volume(volume)
 
 
 def load_start_fon():
@@ -129,11 +164,11 @@ def load_lose_fon():
     music_player.lose()
     text = ['Увы, но ваш персонаж коснулся лавы.',
             'К сожалению, это - мгновенная смерть. :(',
-            'Ничего страшного, в следующий раз будьте бдительны!!!']
+            'Ничего страшного, в следующий раз будьте бдительней!!!']
     x = 180
     y = 500
     count = 0
-    color = pygame.Color('white')
+    color = WHITE
 
     fon = pygame.transform.scale(load_image('lose_fon.jpg'), (width, height))
     screen.blit(fon, (0, 0))
@@ -199,7 +234,7 @@ music_player.play()
 
 
 class Hero(pygame.sprite.Sprite):
-    sheet = load_image('hero.png', (0, 0, 0))
+    sheet = load_image('hero.png', BLACK)
     columns = rows = 2
 
     def __init__(self, pos):
@@ -234,21 +269,23 @@ class Hero(pygame.sprite.Sprite):
         flag = 1
         for sprite in sprites:
             if (sprite.__class__.__name__ == 'Lava' and
-                    any(i in range(sprite.rect.y + 5, sprite.rect.y + 21) for i in [self.rect.y, self.rect.y + 25])
-                    and any(i in range(sprite.rect.x + 5, sprite.rect.x + 21)for i in [self.rect.x, self.rect.x + 25])):
+                    any(i in range(sprite.rect.y + 2, sprite.rect.y + 24) for i in
+                        [self.rect.y, self.rect.y + HERO_SIDE])
+                    and any(i in range(sprite.rect.x + 2, sprite.rect.x + 24) for i in
+                            [self.rect.x, self.rect.x + HERO_SIDE])):
                 flag = 2
                 break
             if sprite.__class__.__name__ == 'Wall':
-                if parameter == 1 and sprite.rect.y + 25 - self.rect.y in range(-2, 3):
+                if parameter == 1 and sprite.rect.y + SPRITE_SIDE - self.rect.y in range(-2, 3):
                     flag = 0
                     break
-                if parameter == 2 and sprite.rect.y - self.rect.y - 25 in range(-2, 3):
+                if parameter == 2 and sprite.rect.y - self.rect.y - HERO_SIDE in range(-2, 3):
                     flag = 0
                     break
-                if parameter == 3 and sprite.rect.x - self.rect.x - 25 in range(-2, 3):
+                if parameter == 3 and sprite.rect.x - self.rect.x - HERO_SIDE in range(-2, 3):
                     flag = 0
                     break
-                if parameter == 4 and sprite.rect.x + 25 - self.rect.x in range(-2, 3):
+                if parameter == 4 and sprite.rect.x + SPRITE_SIDE - self.rect.x in range(-2, 3):
                     flag = 0
                     break
             if sprite.__class__.__name__ == 'Grass' and sprite.case == 2:
@@ -295,7 +332,6 @@ class Wall(pygame.sprite.Sprite):
             self.image = Wall.image2
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
-        self.width = self.height = 25
 
 
 class Grass(pygame.sprite.Sprite):
@@ -314,18 +350,16 @@ class Grass(pygame.sprite.Sprite):
             self.image = Grass.image_end_square
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
-        self.width = self.height = 25
 
 
 class Stairs(pygame.sprite.Sprite):
-    image = load_image('stairs.png', (0, 0, 0))
+    image = load_image('stairs.png', BLACK)
 
     def __init__(self, pos):
         super().__init__(objects)
         self.image = Stairs.image
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
-        self.width = self.height = 25
 
 
 class Lava(pygame.sprite.Sprite):
@@ -336,44 +370,51 @@ class Lava(pygame.sprite.Sprite):
         self.image = Lava.image
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
-        self.width = self.height = 25
 
 
 def make_level():
     player = None
-    n = 10
-    m = 10
+    n = width // SPRITE_SIDE
+    m = height // SPRITE_SIDE
+    print(len(lines[7]))
     for i in range(n):
         for j in range(m):
             if lines[j][i] == '#':
-                Wall((i * 25, j * 25), 1)
+                Wall((i * SPRITE_SIDE, j * SPRITE_SIDE), 1)
             elif lines[j][i] == '=':
-                Wall((i * 25, j * 25))
+                Wall((i * SPRITE_SIDE, j * SPRITE_SIDE))
             elif lines[j][i] == '@':
-                player = Hero((i * 25, j * 25))
-                Grass((i * 25, j * 25), 1)
+                player = Hero((i * SPRITE_SIDE, j * SPRITE_SIDE))
+                Grass((i * SPRITE_SIDE, j * SPRITE_SIDE), 1)
             elif lines[j][i] == '.':
-                Grass((i * 25, j * 25))
+                Grass((i * SPRITE_SIDE, j * SPRITE_SIDE))
+                Stairs((i * SPRITE_SIDE, j * SPRITE_SIDE))
             elif lines[j][i] == ';':
-                Grass((i * 25, j * 25), 2)
+                Grass((i * SPRITE_SIDE, j * SPRITE_SIDE), 2)
             elif lines[j][i] == '!':
-                Lava((i * 25, j * 25))
+                Lava((i * SPRITE_SIDE, j * SPRITE_SIDE))
             else:
-                Grass((i * 25, j * 25))
-                Stairs((i * 25, j * 25))
+                Grass((i * SPRITE_SIDE, j * SPRITE_SIDE))
     return player
 
 
 player = make_level()
 running = True
 
+
 while running:
+
+    if music_player.change:
+        music_player.change_volume()
     if not pygame.mixer.music.get_busy():
         music_player.play()
+
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             running = False
             break
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 player.up = True
@@ -385,6 +426,23 @@ while running:
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 player.left = True
                 player.direction = False
+            if event.key == pygame.K_EQUALS:
+                music_player.change = 1
+            if event.key == pygame.K_MINUS:
+                music_player.change = 2
+            if event.key == pygame.K_CAPSLOCK:
+                music_player.order = not music_player.order
+            if event.key == pygame.K_1:
+                music_player.choose_music(0)
+            if event.key == pygame.K_2:
+                music_player.choose_music(1)
+            if event.key == pygame.K_3:
+                music_player.choose_music(2)
+            if event.key == pygame.K_4:
+                music_player.choose_music(3)
+            if event.key == pygame.K_5:
+                music_player.choose_music(4)
+
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 player.up = False
@@ -394,21 +452,26 @@ while running:
                 player.right = False
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 player.left = False
+            if event.key == pygame.K_EQUALS or event.key == pygame.K_MINUS:
+                music_player.change = 0
 
     result = player.check_moving()
     if not result:
         load_lose_fon()
     if result == 2:
         load_end_fon()
+
     player.move()
     if player.left or player.right:
         if player.count == 5:
             player.update()
         player.count = (player.count + 1) % 6
-    screen.fill((0, 0, 0))
+
+    screen.fill(BLACK)
     objects.draw(screen)
     heroes.draw(screen)
     clock.tick(fps)
     pygame.display.flip()
+
 
 pygame.quit()
