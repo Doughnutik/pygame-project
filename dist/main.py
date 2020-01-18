@@ -33,8 +33,9 @@ class Level(QMainWindow):
         self.file.addAction(self.menu)
         self.menu.triggered.connect(self.help)
 
-        self.names = ['Первый', 'Второй', 'Третий', 'Четвёртый', 'Пятый']
-        self.levels = ['level1.txt', 'level2.txt', 'level3.txt', 'level4.txt', 'level5.txt']
+        path = os.path.join('data', 'levels')
+        self.levels = [i for i in os.listdir(path)]
+        self.names = [str(i) for i in range(1, len(self.levels) + 1)]
 
         self.choose.clicked.connect(self.run)
 
@@ -66,22 +67,25 @@ class Help(QWidget):
 class Music:
 
     def __init__(self):
-        self.musics = ['first.mp3', 'second.mp3', 'third.mp3', 'fourth.mp3', 'fifth.mp3', 'sixth.mp3']
+        path = os.path.join('data', 'music')
+        self.musics = [i for i in os.listdir(path) if i != 'win.mp3' and i != 'lose.mp3']
+        self.length = len(self.musics)
+
         self.index = 0
         self.order = False
-        self.played = [False] * 6
+        self.played = [False] * self.length
         self.change = 0
         self.playing = False
         self.pause = False
 
     def play(self):
-        if all([self.played[i] for i in range(6)]):
-            self.played = [False] * 6
+        if all([self.played[i] for i in range(self.length)]):
+            self.played = [False] * self.length
 
         if not self.order:
-            self.index = choice([i for i in range(6) if not self.played[i]])
+            self.index = choice([i for i in range(self.length) if not self.played[i]])
         else:
-            self.index = (self.index + 1) % 6
+            self.index = (self.index + 1) % self.length
 
         self.played[self.index] = True
         music = os.path.join('data/music', self.musics[self.index])
@@ -90,8 +94,8 @@ class Music:
         pygame.mixer.music.play()
 
     def choose_music(self, number):
-        if all([self.played[i] for i in range(6)]):
-            self.played = [False] * 6
+        if all([self.played[i] for i in range(self.length)]):
+            self.played = [False] * self.length
 
         self.index = number
         self.played[self.index] = True
@@ -125,10 +129,10 @@ class Music:
                 pygame.mixer.music.set_volume(volume)
 
     def next_track(self, difference):
-        if all([self.played[i] for i in range(6)]):
-            self.played = [False] * 6
+        if all([self.played[i] for i in range(self.length)]):
+            self.played = [False] * self.length
 
-        self.index = (self.index + difference) % 6
+        self.index = (self.index + difference) % self.length
         self.played[self.index] = True
         music = os.path.join('data/music', self.musics[self.index])
         pygame.mixer.music.load(music)
@@ -464,7 +468,6 @@ while running:
         if pygame.mixer.music.get_busy():
             pygame.mixer.music.stop()
 
-
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
@@ -500,6 +503,14 @@ while running:
                 music_player.choose_music(4)
             if event.key == pygame.K_6:
                 music_player.choose_music(5)
+            if event.key == pygame.K_7:
+                music_player.choose_music(6)
+            if event.key == pygame.K_8:
+                music_player.choose_music(7)
+            if event.key == pygame.K_9:
+                music_player.choose_music(8)
+            if event.key == pygame.K_0:
+                music_player.choose_music(9)
             if event.key == pygame.K_LCTRL or event.key == pygame.K_RCTRL:
                 music_player.next_track(-1)
             if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
